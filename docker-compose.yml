@@ -1,0 +1,48 @@
+version: '3.8'
+
+volumes:
+  postgres-data:
+  redis-data:
+
+services:
+  olx-bot-postgres:
+    container_name: olx-postgres
+    image: postgres:14.7
+    restart: on-failure
+    env_file:
+      - '.env.${NODE_ENV}'
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  olx-bot-redis-cache:
+    image: redis:6
+    container_name: olx-bot-redis-cache
+    restart: on-failure
+    env_file:
+      - '.env.${NODE_ENV}'
+    volumes:
+      - redis-data:/data
+    ports:
+      - '${REDIS_CACHE_PORT}:${REDIS_CACHE_PORT}'
+    expose:
+      - '${REDIS_CACHE_PORT}'
+    command: '--port ${REDIS_CACHE_PORT}'
+  olx-bot-app:
+    container_name: olx-bot-app
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: ./docker/${NODE_ENV}/app.dockerfile
+    env_file:
+      - '.env.${NODE_ENV}'
+    volumes:
+      - /base/node_modules/
+      - ./:/base
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+    depends_on:
+      - olx-bot-postgres
+      - olx-bot-redis-cache

@@ -1,0 +1,39 @@
+# Dependency directories
+/node_modules
+/dist
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+logs
+*.log
+
+# Build files
+/tsconfig*.json
+/nest-cli.json
+/package-lock.json
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+*.code-workspace
+
+# Compiled output
+/dist
+
+# Nest.js cache
+/.nestjs
+
+# Testing
+/coverage
+
+# Editor and OS specific files
+*~
+.DS_Store
+Thumbs.db
+
+ua.json
+src/ua.ts
